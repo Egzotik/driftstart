@@ -6,7 +6,7 @@ using System.Text.Json;
 namespace DriftStart;
 
 public record PeerView(string Id,string Name,bool Ready,double AgeMs,bool Received,string? UserId=null,string? Username=null,string? Nickname=null,string? StaticId=null,string? VehicleName=null,string? VehicleImage=null);
-public record Snapshot(double ServerMs,string Instance,long Version,int ReadyEpoch,string Label,double? StartAt,bool Seated,PeerView[] Peers,Account? User=null,int CountdownMs=6000);
+public record Snapshot(double ServerMs,string Instance,long Version,int ReadyEpoch,string Label,double? StartAt,bool Seated,PeerView[] Peers,Account? User=null,int CountdownMs=6000,string[]? OnlineIds=null);
 public record ConnectionOptions(string Url, string RoomCode, string Name, bool Judge, string JudgeKey,string Token="");
 public record ClockInfo(bool Synced, double Offset, double Rtt);
 
