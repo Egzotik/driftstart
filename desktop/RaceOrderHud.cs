@@ -1,0 +1,13 @@
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+
+namespace DriftStart;
+public sealed class RaceOrderHud:Window
+{
+ readonly StackPanel list=new();
+ public RaceOrderHud(){Title="DriftStart Run Order";WindowStyle=WindowStyle.None;AllowsTransparency=true;Background=Brushes.Transparent;Topmost=true;ShowInTaskbar=false;Width=420;Height=420;var box=new Border{Background=Paint.Brush("#F20A0A0C"),BorderBrush=Paint.Brush("#303034"),BorderThickness=new(1),Padding=new(18)};var root=new StackPanel();var head=new DockPanel{Margin=new(0,0,0,12)};var close=new Button{Content="×",Width=28,Height=22,Padding=new(0),HorizontalAlignment=HorizontalAlignment.Right};close.Click+=(_,_)=>Hide();DockPanel.SetDock(close,Dock.Right);head.Children.Add(close);head.Children.Add(new TextBlock{Text="RUN ORDER / ОЧЕРЕДЬ ЗАЕЗДОВ",Foreground=Paint.Brush("#F20D4F"),FontSize=10,FontWeight=FontWeights.Bold,VerticalAlignment=VerticalAlignment.Center});root.Children.Add(head);var scroll=new ScrollViewer{Content=list,MaxHeight=350,VerticalScrollBarVisibility=ScrollBarVisibility.Auto};root.Children.Add(scroll);box.Child=root;Content=box;Left=28;Top=180;head.MouseLeftButtonDown+=(_,e)=>{if(e.LeftButton==System.Windows.Input.MouseButtonState.Pressed)DragMove();};}
+ Border Row(string position,Entry a,Entry? b=null){var grid=new Grid();grid.ColumnDefinitions.Add(new(){Width=new(48)});grid.ColumnDefinitions.Add(new(){Width=new(1,GridUnitType.Star)});var n=new TextBlock{Text=position,Foreground=Paint.Brush(position=="NOW"?"#F20D4F":"#77777C"),FontWeight=FontWeights.Bold,VerticalAlignment=VerticalAlignment.Center};grid.Children.Add(n);var text=new TextBlock{Text=b==null?$"{a.Name}  #{a.StaticId??"—"}":$"{a.Name}  VS  {b.Name}\n#{a.StaticId??"—"} / #{b.StaticId??"—"}",TextWrapping=TextWrapping.Wrap};Grid.SetColumn(text,1);grid.Children.Add(text);return new Border{Child=grid,BorderBrush=Paint.Brush(position=="NOW"?"#F20D4F":"#2D2D30"),BorderThickness=new(position=="NOW"?3:1,0,0,0),Padding=new(10),Margin=new(0,0,0,7),Background=Paint.Brush("#111113")};}
+ public void Display(Tournament t){list.Children.Clear();if(t.Phase=="qualification"){for(int i=0;i<t.Entries.Length;i++)list.Children.Add(Row(i==0?"NOW":i==1?"NEXT":(i+1).ToString("00"),t.Entries[i]));}else if(t.Rounds.Length>0){var first=t.Rounds[0];for(int i=0;i<first.Length;i++){var a=t.Entries.FirstOrDefault(x=>x.Id==first[i].A);var b=t.Entries.FirstOrDefault(x=>x.Id==first[i].B);if(a!=null)list.Children.Add(Row(i==0?"NOW":i==1?"NEXT":(i+1).ToString("00"),a,b));}}if(!IsVisible)Show();}
+}

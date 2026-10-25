@@ -1,0 +1,10 @@
+**/bin/
+**/obj/
+**/node_modules/
+**/.wrangler/
+**/.dev.vars
+**/.env*
+*.pfx
+*.p12
+*.key
+artifacts/
