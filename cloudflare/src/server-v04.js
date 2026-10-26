@@ -12,7 +12,7 @@ export default {
  async fetch(request,env){
   const url=new URL(request.url);
   if(request.method==='GET'&&url.pathname==='/health')return json({service:'DriftStart',version:'2.0.0',transport:'websocket',discordConfigured:!!env.DISCORD_CLIENT_ID&&!!env.DISCORD_CLIENT_SECRET,rooms:true});
-  if(request.method==='GET'&&url.pathname==='/update/manifest'){const shaUrl=env.UPDATE_SHA256_URL||'https://github.com/Egzotik/driftstart/releases/latest/download/DriftStart.sha256';let sha256=env.UPDATE_SHA256||null;if(!sha256)try{const response=await fetch(shaUrl,{headers:{'User-Agent':'DriftStart-Updater'}});if(response.ok)sha256=(await response.text()).trim().split(/\s+/)[0];}catch{}return json({version:env.UPDATE_VERSION||'2.0.0',url:env.UPDATE_URL||'https://github.com/Egzotik/driftstart/releases/latest/download/DriftStart.exe',sha256,notes:env.UPDATE_NOTES||'Полный редизайн: компактные панели, удобный турнир, обновлённый вход и проверка сессии без ожидания каталога.'});}
+  if(request.method==='GET'&&url.pathname==='/update/manifest')return json({version:env.UPDATE_VERSION||'2.0.0',url:env.UPDATE_URL||'https://github.com/Egzotik/driftstart/releases/download/v2.0.0/DriftStart.exe?release=2.0.0',sha256:env.UPDATE_SHA256||'5469DC4B793C0B8D74F92613ED8FEEFC38EC0B2066D122D81F77DF94221ADA3B',notes:env.UPDATE_NOTES||'Полный редизайн: компактные панели, удобный турнир, обновлённый вход и проверка сессии без ожидания каталога.'});
   if(!paths.has(url.pathname))return json({error:'Not found'},404);
   const hub=env.ROOM.getByName('main');
   if(['/oauth/callback','/auth/start','/auth/claim','/api/me','/api/profile','/api/logout','/api/rooms','/api/members','/api/member-role','/api/member-remove','/api/online'].includes(url.pathname))return hub.fetch(request);
