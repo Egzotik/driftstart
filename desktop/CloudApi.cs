@@ -13,7 +13,7 @@ public record Account(string Id,string Name,string Username,string Role,PlayerPr
 {
     public string RoleLabel=>Role switch{"leader"=>"Лидер","cohost"=>"Помощник","judge"=>"Судья · "+DisciplineLabel(Discipline),_=>"Пилот"};
     public static string DisciplineLabel(string? value)=>value switch{"trajectory"=>"траектория","angle"=>"угол","style"=>"стиль",_=>"дисциплина не назначена"};
-    public override string ToString()=>$"{Name} (@{Username}) · {Id} · {RoleLabel}";
+    public override string ToString()=>$"{Profile?.Nickname??Name}"+(Profile?.StaticId is string id?$"  #{id}":"")+$" · {RoleLabel}";
 }
 public sealed class ApiException(string message,int status):Exception(message){public int Status{get;}=status;}
 public sealed class CloudApi:IDisposable
@@ -43,6 +43,13 @@ public sealed class CloudApi:IDisposable
         return result;
     }
     public async Task RefreshMe(CancellationToken token=default){var r=await Request("/api/me",token:token);Me=r.GetProperty("user").Deserialize<Account>(JsonOptions);}
+    public async Task<bool> RestoreSession(CancellationToken token)
+    {
+        if(Token.Length==0)return false;
+        using var timeout=CancellationTokenSource.CreateLinkedTokenSource(token);timeout.CancelAfter(TimeSpan.FromSeconds(8));
+        try{await RefreshMe(timeout.Token);return true;}
+        catch(ApiException ex)when(ex.Status==401){Forget();return false;}
+    }
     public async Task Login(Action<string> notice,CancellationToken token)
     {
         if(Token.Length>0){try{await RefreshMe(token);return;}catch(ApiException ex)when(ex.Status==401){Forget();}}
@@ -62,6 +69,7 @@ public sealed class CloudApi:IDisposable
         throw new ApiException("Время входа истекло. Повторите вход",408);
     }
     public void SelectRoom(string room)=>Room=room.Trim().ToUpperInvariant();
+    internal void PreviewAccount(Account account){if(!App.Preview)throw new InvalidOperationException("Preview only");Me=account;}
     public void SetRoomRole(string role){if(Me!=null)Me=Me with{Role=role};}
     public async Task Logout(){try{if(Token.Length>0)await Request("/api/logout",new{});}finally{Forget();}}
     void Forget(){Token="";Me=null;try{File.Delete(cachePath);}catch(IOException){}catch(UnauthorizedAccessException){}}

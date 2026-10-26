@@ -9,11 +9,12 @@ public partial class App : Application
     public static bool Preview;
     protected override async void OnStartup(StartupEventArgs e)
     {
-        if(await UpdateService.ApplyIncoming(e.Args)){Shutdown();return;}base.OnStartup(e); Preview=e.Args.Contains("--preview")||e.Args.Contains("--profile-preview")||e.Args.Contains("--hud-preview")||e.Args.Contains("--verify")||e.Args.Contains("--event-preview")||e.Args.Contains("--bracket-preview");
+        if(await UpdateService.ApplyIncoming(e.Args)){Shutdown();return;}base.OnStartup(e); Preview=e.Args.Contains("--ui-preview")||e.Args.Contains("--preview")||e.Args.Contains("--profile-preview")||e.Args.Contains("--hud-preview")||e.Args.Contains("--verify")||e.Args.Contains("--event-preview")||e.Args.Contains("--bracket-preview");
         var window=new MainWindowV4();MainWindow=window;
         window.Loaded+=async(_,_)=>
         {
-            if(e.Args.Length==2&&e.Args[0]=="--preview"){window.Demo();await Task.Delay(180);Save(window,e.Args[1]);Shutdown();}
+            if(e.Args.Length==3&&e.Args[0]=="--ui-preview"){window.DemoPage(e.Args[1]);await Task.Delay(400);Save(window,e.Args[2]);Shutdown();}
+            else if(e.Args.Length==2&&e.Args[0]=="--preview"){window.Demo();await Task.Delay(180);Save(window,e.Args[1]);Shutdown();}
             else if(e.Args.Length==2&&e.Args[0]=="--profile-preview"){window.DemoProfile();await Task.Delay(1800);Save(window,e.Args[1]);Shutdown();}
             else if(e.Args.Length==2&&(e.Args[0]=="--event-preview"||e.Args[0]=="--bracket-preview")){window.Hide();using var api=new CloudApi(Defaults.ServerUrl,"preview");var events=new EventWindow(api);events.Show();events.Demo(e.Args[0]=="--event-preview"?"qualification":"bracket");await Task.Delay(200);Save(events,e.Args[1]);events.Close();Shutdown();}
             else if(e.Args.Length==2&&e.Args[0]=="--hud-preview"){var hud=new Hud();hud.Show();hud.Display("СТАРТ","Пара 12 / проезд 1",5,"ЕДИНОЕ ВРЕМЯ. ОБЩИЙ СТАРТ.");await Task.Delay(180);Save(hud,e.Args[1]);hud.Close();Shutdown();}
