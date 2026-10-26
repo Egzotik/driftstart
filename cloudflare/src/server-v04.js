@@ -12,7 +12,7 @@ export default {
  async fetch(request,env){
   const url=new URL(request.url);
   if(request.method==='GET'&&url.pathname==='/health')return json({service:'DriftStart',version:'2.0.1',transport:'websocket',discordConfigured:!!env.DISCORD_CLIENT_ID&&!!env.DISCORD_CLIENT_SECRET,rooms:true});
-  if(request.method==='GET'&&url.pathname==='/update/manifest')return json({version:env.UPDATE_VERSION||'2.0.1',url:env.UPDATE_URL||'https://github.com/Egzotik/driftstart/releases/download/v2.0.1/DriftStart.exe?release=2.0.1',sha256:env.UPDATE_SHA256||'BA85A4F246C61C7F76AE57A7B758868D8BBE082D57B6677A80ECDFE932AFBC39',notes:env.UPDATE_NOTES||'Новый стартовый светофор: лампы последовательно заполняются цветом, а на старте все пять становятся зелёными.'});
+  if(request.method==='GET'&&url.pathname==='/update/manifest')return json({version:env.UPDATE_VERSION||'2.0.1',url:env.UPDATE_URL||'https://github.com/Egzotik/driftstart/releases/download/v2.0.1/DriftStart.exe?sha=ba85a4f246c6',sha256:env.UPDATE_SHA256||'BA85A4F246C61C7F76AE57A7B758868D8BBE082D57B6677A80ECDFE932AFBC39',notes:env.UPDATE_NOTES||'Новый стартовый светофор: лампы последовательно заполняются цветом, а на старте все пять становятся зелёными.'});
   if(!paths.has(url.pathname))return json({error:'Not found'},404);
   const hub=env.ROOM.getByName('main');
   if(['/oauth/callback','/auth/start','/auth/claim','/api/me','/api/profile','/api/logout','/api/rooms','/api/members','/api/member-role','/api/member-remove','/api/online'].includes(url.pathname))return hub.fetch(request);
