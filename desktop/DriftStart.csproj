@@ -2,7 +2,7 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType><TargetFramework>net10.0-windows</TargetFramework><UseWPF>true</UseWPF>
     <Nullable>enable</Nullable><ImplicitUsings>enable</ImplicitUsings><AssemblyName>DriftStart</AssemblyName>
-    <Version>2.0.0</Version><Product>DriftStart</Product><Description>Discord drift groups, synchronized start lights and tournament control</Description>
+    <Version>2.0.1</Version><Product>DriftStart</Product><Description>Discord drift groups, synchronized start lights and tournament control</Description>
     <ApplicationManifest>app.manifest</ApplicationManifest><ApplicationIcon>Assets\DriftStart.ico</ApplicationIcon>
     <PublishSingleFile>true</PublishSingleFile><SelfContained>true</SelfContained><RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract><EnableCompressionInSingleFile>false</EnableCompressionInSingleFile>

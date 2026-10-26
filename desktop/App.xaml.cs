@@ -17,7 +17,7 @@ public partial class App : Application
             else if(e.Args.Length==2&&e.Args[0]=="--preview"){window.Demo();await Task.Delay(180);Save(window,e.Args[1]);Shutdown();}
             else if(e.Args.Length==2&&e.Args[0]=="--profile-preview"){window.DemoProfile();await Task.Delay(1800);Save(window,e.Args[1]);Shutdown();}
             else if(e.Args.Length==2&&(e.Args[0]=="--event-preview"||e.Args[0]=="--bracket-preview")){window.Hide();using var api=new CloudApi(Defaults.ServerUrl,"preview");var events=new EventWindow(api);events.Show();events.Demo(e.Args[0]=="--event-preview"?"qualification":"bracket");await Task.Delay(200);Save(events,e.Args[1]);events.Close();Shutdown();}
-            else if(e.Args.Length==2&&e.Args[0]=="--hud-preview"){var hud=new Hud();hud.Show();hud.Display("СТАРТ","Пара 12 / проезд 1",5,"ЕДИНОЕ ВРЕМЯ. ОБЩИЙ СТАРТ.");await Task.Delay(180);Save(hud,e.Args[1]);hud.Close();Shutdown();}
+            else if(e.Args.Length==2&&e.Args[0]=="--hud-preview"){var hud=new Hud();hud.Show();hud.Display("03","Пара 12 / проезд 1",2,"ПРИГОТОВИТЬСЯ");await Task.Delay(220);Save(hud,e.Args[1]);hud.Close();Shutdown();}
             else if(e.Args.Length==2&&e.Args[0]=="--verify"){window.Hide();await ClientVerification.Run(e.Args[1]);Shutdown();}
             else { }
         };
